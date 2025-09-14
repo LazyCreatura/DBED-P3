@@ -6,16 +6,16 @@ from b_tree import BTree
 class SimpleDatabase:
     def __init__(self):
         # before an actual table is loaded, class members are set to None
-        
+
         # a header is a list of column names
         # e.g., ['name', 'id', 'grade']
         self.header = None
-        
+
         # map column name to column index in the header
         self.columns = None
-        
+
         # None if table is not loaded
-        # otherwise list b-tree indices corresponding to columns 
+        # otherwise list b-tree indices corresponding to columns
         self.b_trees = None
 
         # rows contains actual data; this is a list of lists
@@ -27,6 +27,7 @@ class SimpleDatabase:
 
         # name of the loaded table
         self.table_name = None
+
 
     def get_table_name(self):
         return self.table_name
@@ -46,11 +47,11 @@ class SimpleDatabase:
             self.header = f.readline().rstrip().split(",")
             self.rows = [line.rstrip().split(",") for line in f]
         self.table_name = table_name
-        
+
         self.columns = {}
         for i, column_name in enumerate(self.header):
             self.columns[column_name] = i
-            
+
         self.b_trees = [None] * len(self.header)
         print("... done!")
 
@@ -64,12 +65,17 @@ class SimpleDatabase:
         if column_name not in self.columns:
             # no such column
             return self.header, []
-            
+
         col_id = self.columns[column_name]
-        
+        btree = self.b_trees[col_id]
         selected_rows = []
-        for row in self.rows:
-            if row[col_id] == column_value:
-                selected_rows.append(row)
-        
+        if btree is None: # Use Linear Scan if there aren't any index
+            for row in self.rows:
+                if row[col_id] == column_value:
+                    selected_rows.append(row)
+        else: #index if exist
+            indices = btree.search(column_value)
+            for idx in indices:
+                selected_rows.append(self.rows[idx])
+
         return self.header, selected_rows
