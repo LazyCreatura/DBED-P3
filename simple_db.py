@@ -29,6 +29,7 @@ class SimpleDatabase:
         self.table_name = None
 
 
+
     def get_table_name(self):
         return self.table_name
 
@@ -77,5 +78,7 @@ class SimpleDatabase:
             indices = btree.search(column_value)
             for idx in indices:
                 selected_rows.append(self.rows[idx])
+
+    
 
         return self.header, selected_rows
