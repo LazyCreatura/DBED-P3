@@ -89,9 +89,11 @@ def run_engine():
             if len(parts) == 3 and parts[0].lower() == "create" and parts[1].lower() == "index":
                 column_name = parts[2]
                 db.create_index(column_name)
+                #duplicate message but don't know how to fix -> call directly from simple db
                 # if True:
                 #     print(f"Index created on column: {column_name}")
             else:
+                #syntax check
                 print("Unrecognized command!")
 
         elif command.startswith("drop index"):
@@ -99,6 +101,7 @@ def run_engine():
             if len(parts) == 3 and parts[0].lower() == "drop" and parts[1].lower() == "index":
                 column_name = parts[2]
                 db.drop_index(column_name)
+                # similar with create index
                 # if True:
                 #     print(f"Index dropped on column: {column_name}")
             else:

@@ -75,7 +75,7 @@ class SimpleDatabase:
             for row in self.rows:
                 if row[col_id] == column_value:
                     selected_rows.append(row)
-        else: #index if exist
+        else: #check index if exist
             result = btree.search_key(column_value)
             if result is not None:
                 node, index = result
@@ -90,7 +90,7 @@ class SimpleDatabase:
         if self.table_name is None:
             print("No table loaded")
             return False
-
+    #check if the column exist - if True, check if its indexed or not
         if column_name not in self.columns:
             print(f"Column '{column_name}' does not exist")
             return False
@@ -103,7 +103,7 @@ class SimpleDatabase:
         btree = BTree()
         for i, row in enumerate(self.rows):
             btree.insert_key(row[col_id], i)
-
+    #Notify the index creation
         self.b_trees[col_id] = btree
         print(f"Index created on column: {column_name}")
         return True
@@ -114,7 +114,7 @@ class SimpleDatabase:
         if self.table_name is None:
             print("No table loaded")
             return False
-
+    #check if the column exist - if True, check if it exist as index or not
         if column_name not in self.columns:
             print(f"Column '{column_name}' does not exist")
             return False
@@ -123,7 +123,7 @@ class SimpleDatabase:
         if self.b_trees[col_id] is None:
             print(f"No index exists on column '{column_name}'")
             return False
-
+    #notify drop index
         self.b_trees[col_id] = None
         print(f"Index dropped on column: {column_name}")
         return True

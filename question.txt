@@ -11,3 +11,10 @@ Note that you don't need to provide any additional code for this question, just 
 
 Answer:
 ... your answer here ...
+Firt of all, I will get a set of different element from database as further from header as better
+to see seaching time
+After that, create the indexed and compare with the former test (usually faster if extend right)
+Looking for smaller data as the attribue of B-tree index show it is not sufficient for small data
+(in this case linear could be equal or better than Btree)
+Finally, check the logic of the code to make sure there aren't any duplicate or false notification which
+make the test not consistence (usually came to first for clear test)
