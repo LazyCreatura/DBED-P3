@@ -1,3 +1,4 @@
+from os import access
 import time
 
 from simple_db import SimpleDatabase
@@ -84,19 +85,22 @@ def run_engine():
 
         # add code for processing create index and drop index here ...
         elif command.startswith("create index"):
-            parts = command.split();
+            parts = command.split()
             if len(parts) == 3 and parts[0].lower() == "create" and parts[1].lower() == "index":
                 column_name = parts[2]
                 db.create_index(column_name)
-                print(f"Index created on column: {column_name}")
+                # if True:
+                #     print(f"Index created on column: {column_name}")
             else:
                 print("Unrecognized command!")
+
         elif command.startswith("drop index"):
             parts = command.split()
             if len(parts) == 3 and parts[0].lower() == "drop" and parts[1].lower() == "index":
                 column_name = parts[2]
                 db.drop_index(column_name)
-                print(f"Index dropped on column: {column_name}")
+                # if True:
+                #     print(f"Index dropped on column: {column_name}")
             else:
                 print("Unrecognized command!")
 
@@ -105,3 +109,5 @@ def run_engine():
 
 if __name__ == "__main__":
     run_engine()
+
+

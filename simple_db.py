@@ -70,15 +70,72 @@ class SimpleDatabase:
         col_id = self.columns[column_name]
         btree = self.b_trees[col_id]
         selected_rows = []
+
         if btree is None: # Use Linear Scan if there aren't any index
             for row in self.rows:
                 if row[col_id] == column_value:
                     selected_rows.append(row)
         else: #index if exist
-            indices = btree.search(column_value)
-            for idx in indices:
-                selected_rows.append(self.rows[idx])
-
-    
+            result = btree.search_key(column_value)
+            if result is not None:
+                node, index = result
+                indices = node.key_vals[index][1]  #collecting row indice data
+                for idx in indices:
+                    selected_rows.append(self.rows[idx])
 
         return self.header, selected_rows
+
+    #define to add index
+    def create_index(self, column_name):
+        if self.table_name is None:
+            print("No table loaded")
+            return False
+
+        if column_name not in self.columns:
+            print(f"Column '{column_name}' does not exist")
+            return False
+
+        col_id = self.columns[column_name]
+        if self.b_trees[col_id] is not None:
+            print(f"Index on column '{column_name}' already exists")
+            return False
+        #Create btree for index column
+        btree = BTree()
+        for i, row in enumerate(self.rows):
+            btree.insert_key(row[col_id], i)
+
+        self.b_trees[col_id] = btree
+        print(f"Index created on column: {column_name}")
+        return True
+
+
+    #drop index
+    def drop_index(self, column_name):
+        if self.table_name is None:
+            print("No table loaded")
+            return False
+
+        if column_name not in self.columns:
+            print(f"Column '{column_name}' does not exist")
+            return False
+
+        col_id = self.columns[column_name]
+        if self.b_trees[col_id] is None:
+            print(f"No index exists on column '{column_name}'")
+            return False
+
+        self.b_trees[col_id] = None
+        print(f"Index dropped on column: {column_name}")
+        return True
+
+    #collect index
+    def get_indexed_columns(self):
+        if self.table_name is None:
+            return []
+
+        indexed_columns = []
+        for column_name, col_id in self.columns.items():
+            if self.b_trees[col_id] is not None:
+                indexed_columns.append(column_name)
+        return indexed_columns
+
